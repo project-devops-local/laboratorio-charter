@@ -1,0 +1,55 @@
+services: 
+  jenkins_charter:
+    container_name: jenkinsCharter
+    image: maikol555/jenkins-charter:1.0
+    hostname: jenkins
+    ports: 
+      - "8080:8080"
+    volumes: 
+      - /home/devops/data-storge/charter/jenkins_home:/var/jenkins_home
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4000M
+    networks:
+      default:
+        ipv4_address: 10.20.2.201
+  sonarqube_charter:
+      container_name: sonarqubeCharter
+      image: sonarqube:lts-community
+      hostname: sonarqube
+      ports: 
+        - "9000:9000"
+      volumes: 
+        - /home/devops/data-storge/charter/sonarqube/data:/opt/sonarqube/data
+        - /home/devops/data-storge/charter/sonarqube/logs:/opt/sonarqube/logs
+        - /home/devops/data-storge/charter/sonarqube/extensions:/opt/sonarqube/extensions
+      deploy:
+        resources:
+          limits:
+            memory: 4000M
+      networks: 
+        default:
+          ipv4_address: 10.20.2.40
+  centos_charter:
+      container_name: centosCharter
+      image: maikol555/nginx
+      hostname: nginx
+      ports: 
+        - "8082:80"
+        - "22:22"
+      volumes: 
+        - /home/devops/proyectos/laboratorio-charter/servers/centos/data/config/nginx.conf:/etc/nginx/nginx.conf
+        - /home/devops/proyectos/laboratorio-charter/servers/centos/data/web:/usr/share/nginx/html/home/
+      deploy:
+        resources:
+          limits:
+            memory: 1000M
+      networks: 
+        default:
+          ipv4_address: 10.20.2.15
+networks:
+  default:
+    external: true  
+    name: charter
